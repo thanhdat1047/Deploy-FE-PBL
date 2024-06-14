@@ -28,7 +28,6 @@ const Dashboard = () => {
     setShowAll(!showAll);
     setNumberList(numberList === 5 ? 10 : 5);
   };
-  const [idNovelRecommender, setIdNovelRecommender] = useState();
 
   const {
     novelData,
@@ -39,19 +38,21 @@ const Dashboard = () => {
     setFilter,
     page,
     setPage,
+    idNovelRecommender,
+    setIdNovelRecommender,
   } = useNovel();
-  const [isTrained , setIsTraned] = useState(true)
+  const [isTrained, setIsTraned] = useState(true);
   useEffect(() => {
-    getRecomment(Token?.id )
+    getRecomment(Token?.id)
       .then((res) => {
-        console.log('recommentId',res);
+        console.log("recommentId", res);
         setIdNovelRecommender(res.data);
       })
       .catch((error) => {
-        console.error('err',error);
-        setIsTraned(false)
+        console.log("id nay ch dc train", error);
+        setIsTraned(false);
       });
-    
+
     const newFilter = {
       ...filter,
       sortField: "powerStone",
@@ -85,6 +86,7 @@ const Dashboard = () => {
         setIsLoading(false);
       })
       .catch((error) => {
+       
         toast.error(error);
         setIsLoading(false);
       });
@@ -110,21 +112,20 @@ const Dashboard = () => {
     // });
   }, []);
 
-  useEffect(()=>{
-    if(!isTrained)
-    {
-      getRecomment("017173780861571831")
-      .then((res) => {
-        console.log('recommentId other',res.status);
-        setIdNovelRecommender(res.data);
-      })
-      .catch((error) => {
-        console.error('err',error);
-        //setIsTraned(false)
-      });
-
+  useEffect(() => {
+    if (!isTrained) {
+      getRecomment("4300323027")
+        .then((res) => {
+          setIdNovelRecommender(res.data);
+          console.log("lay id mac dinh",res.data);
+        })
+        .catch((error) => {
+          console.error("err", error);
+          //setIsTraned(false)
+        });
     }
-  },[isTrained])
+  }, [isTrained]);
+
   return !is_loading ? (
     <div className=" flex flex-col justify-end items-center mx-auto  w-screen max-w-[1080px]">
       <Banner setIsLoading={setIsLoading} />
@@ -189,9 +190,7 @@ const Dashboard = () => {
           <SelectionImage dataSelectionImage={listNovel?.topranking} />
         </div>
         <div style={{ flex: 4 }}>
-          <RecommenderNovels
-            dataRecommenderNovels={listNovel?.weeklyfeatured}
-          />
+          <RecommenderNovels />
         </div>
       </div>
       <div className="flex flex-col flex-wrap   w-full pb-12 ">
